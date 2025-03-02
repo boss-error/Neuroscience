@@ -14,16 +14,23 @@ def ForwardPass(i1, i2, w1, w2, w3, w4, b1, w5, w6, w7, w8, b2):
     return h1, h2, o1, o2
 
 def Backpropagation(i1, i2, h1, h2, o1, o2, w5, w6, w7, w8, target_o1, target_o2, learning_rate):
+    dw5 = (o1 - target_o1) * o1 * (1 - o1) * h1
+    
     delta_o1 = (o1 - target_o1) * sigmoid_derivative(o1)
     delta_o2 = (o2 - target_o2) * sigmoid_derivative(o2)
+    
+    dw6 = delta_o1 * h2
+    dw7 = delta_o2 * h1
+    dw8 = delta_o2 * h2
     
     delta_h1 = (delta_o1 * w5 + delta_o2 * w7) * sigmoid_derivative(h1)
     delta_h2 = (delta_o1 * w6 + delta_o2 * w8) * sigmoid_derivative(h2)
     
-    dw1, dw2 = i1 * delta_h1, i2 * delta_h1
-    dw3, dw4 = i1 * delta_h2, i2 * delta_h2
-    dw5, dw6 = h1 * delta_o1, h2 * delta_o1
-    dw7, dw8 = h1 * delta_o2, h2 * delta_o2
+    dw1 = i1 * delta_h1
+    dw2 = i2 * delta_h1
+    dw3 = i1 * delta_h2
+    dw4 = i2 * delta_h2
+    
     db1 = delta_h1 + delta_h2
     db2 = delta_o1 + delta_o2
     
@@ -43,16 +50,16 @@ dw1, dw2, dw3, dw4, dw5, dw6, dw7, dw8, db1, db2 = Backpropagation(
     i1, i2, h1, h2, o1, o2, w5, w6, w7, w8, target_o1, target_o2, learning_rate
 )
 
-w1 -= learning_rate * dw1
-w2 -= learning_rate * dw2
-w3 -= learning_rate * dw3
-w4 -= learning_rate * dw4
-w5 -= learning_rate * dw5
-w6 -= learning_rate * dw6
-w7 -= learning_rate * dw7
-w8 -= learning_rate * dw8
-b1 -= learning_rate * db1
-b2 -= learning_rate * db2
+w1 = w1 - learning_rate * dw1
+w2 = w2 - learning_rate * dw2
+w3 = w3 - learning_rate * dw3
+w4 = w4 - learning_rate * dw4
+w5 = w5 - learning_rate * dw5
+w6 = w6 - learning_rate * dw6
+w7 = w7 - learning_rate * dw7
+w8 = w8 - learning_rate * dw8
+b1 = b1 - learning_rate * db1
+b2 = b2 - learning_rate * db2
 
 print(f"Updated w1: {w1:.4f}, w2: {w2:.4f}, w3: {w3:.4f}, w4: {w4:.4f}")
 print(f"Updated w5: {w5:.4f}, w6: {w6:.4f}, w7: {w7:.4f}, w8: {w8:.4f}")
